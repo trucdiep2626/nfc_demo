@@ -34,21 +34,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  nfc_in_flutter: ^2.0.5
-  flutter_nfc_kit: ^3.2.0
   # Riverpod
   flutter_riverpod: ^1.0.3
 
   # Code generate
   freezed:
 
-
-  nfc_manager: ^3.1.1
-
-#  nfc_in_flutter:
-#    git:
-#      url: https://github.com/semlette/nfc_in_flutter.git
-#      ref: master
+  nfc_in_flutter:
+    git:
+      url: https://github.com/semlette/nfc_in_flutter.git
+      ref: master
 dev_dependencies:
   flutter_test:
     sdk: flutter
