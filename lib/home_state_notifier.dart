@@ -10,8 +10,20 @@ final homeProvider = StateNotifierProvider<HomeStateNotifier, HomeState>((ref) {
 
 class HomeStateNotifier extends StateNotifier<HomeState> with LocatorMixin {
   HomeStateNotifier() : super(HomeState()) {
-    startScanning();
+    init();
   }
+
+  void init(){
+    NFC.isNDEFSupported.then((supported) {
+      state = state.copyWith(supportsNFC: supported);
+      startScanning();
+    });
+  }
+
+  void clearOldResult(){
+    state = state.copyWith(errorText: "");
+  }
+
   void addNewRecord(String newRecord) {
     List<String> newList = [];
     newList.addAll(state.records);
@@ -44,19 +56,15 @@ class HomeStateNotifier extends StateNotifier<HomeState> with LocatorMixin {
 
   void startScanning() {
     List<String> readResults = [];
-
-    log('dddddddddddddddd');
-    final newStream = NFC
-        .readNDEF(alertMessage: "Custom message with readNDEF#alertMessage")
-        .listen((NDEFMessage message) {
-      log('dfffffffffffffffff');
+    final newStream = NFC.readNDEF().listen((NDEFMessage message) {
+      state = state.copyWith(readResults: []);
+      readResults.clear();
       if (message.isEmpty) {
-        log("Read empty NDEF message");
+        readResults.add("Read empty NDEF message");
+        state = state.copyWith(readResults: readResults);
         return;
       }
-      state = state.copyWith(readResults: []);
       log("Read NDEF message with ${message.records.length} records");
-      readResults.clear();
       for (NDEFRecord record in message.records) {
         readResults.add(
             "Record: data '${record.data}' and language code '${record.languageCode}'");
@@ -76,11 +84,11 @@ class HomeStateNotifier extends StateNotifier<HomeState> with LocatorMixin {
     }, onDone: () {
       state = state.copyWith(stream: null);
     });
-
     state = state.copyWith(stream: newStream);
   }
 
   void stopScanning() {
+    log('gggggggggggg');
     state.stream?.cancel();
     state = state.copyWith(stream: null);
   }

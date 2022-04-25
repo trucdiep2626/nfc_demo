@@ -6,7 +6,6 @@ part 'home_state.freezed.dart';
 
 @freezed
 abstract class HomeState with _$HomeState{
-//  @JsonSerializable(explicitToJson: true)
    factory HomeState({
      @Default([]) List<String> readResults,
      @Default([]) List<String> records,
